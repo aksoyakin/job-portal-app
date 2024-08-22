@@ -33,7 +33,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
                 .anyMatch(r -> r.getAuthority().equals("Recruiter"));
 
         if(hasJobSeekerRole || hasRecruiterRole) {
-            response.sendRedirect("/dashboard");
+            response.sendRedirect("/dashboard/");
         }
     }
 }
