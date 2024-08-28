@@ -5,8 +5,15 @@ import com.aksoyakin.jobportalapp.entity.Skills;
 import com.aksoyakin.jobportalapp.entity.Users;
 import com.aksoyakin.jobportalapp.repository.UsersRepository;
 import com.aksoyakin.jobportalapp.services.JobSeekerProfileService;
+import com.aksoyakin.jobportalapp.services.JobSeekerSaveService;
+import com.aksoyakin.jobportalapp.util.FileDownloadUtil;
 import com.aksoyakin.jobportalapp.util.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,10 +21,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -30,13 +34,15 @@ import java.util.Optional;
 @RequestMapping("/job-seeker-profile")
 public class JobSeekerProfileController {
 
+    private final JobSeekerSaveService jobSeekerSaveService;
     private JobSeekerProfileService jobSeekerProfileService;
     private UsersRepository usersRepository;
 
     @Autowired
-    public JobSeekerProfileController(JobSeekerProfileService jobSeekerProfileService, UsersRepository usersRepository) {
+    public JobSeekerProfileController(JobSeekerProfileService jobSeekerProfileService, UsersRepository usersRepository, JobSeekerSaveService jobSeekerSaveService) {
         this.jobSeekerProfileService = jobSeekerProfileService;
         this.usersRepository = usersRepository;
+        this.jobSeekerSaveService = jobSeekerSaveService;
     }
 
     @GetMapping("/")
@@ -112,5 +118,37 @@ public class JobSeekerProfileController {
         }
 
         return "redirect:/dashboard/";
+    }
+
+    @GetMapping("/{id}")
+    public String candidateProfile(@PathVariable("id") int id, Model model) {
+        Optional<JobSeekerProfile> seekerProfile = jobSeekerProfileService.getOne(id);
+        model.addAttribute("profile", seekerProfile.get());
+        return "job-seeker-profile";
+    }
+
+    @GetMapping("/downloadResume")
+    public ResponseEntity<?> downloadResume(@RequestParam(value = "fileName") String fileName,
+                                            @RequestParam(value = "userID") String userId){
+        FileDownloadUtil fileDownloadUtil = new FileDownloadUtil();
+        Resource resource = null;
+
+        try {
+            resource = fileDownloadUtil.getFileAsResource("photos/candidate/" + userId, fileName);
+        }catch (IOException io){
+            return ResponseEntity.badRequest().build();
+        }
+
+        if (resource == null){
+            return new ResponseEntity<>("File not found", HttpStatus.NOT_FOUND);
+        }
+
+        String contentType = "application/octet-stream";
+        String headerValue = "attachment; filename=\"" + resource.getFilename() + "\"";
+
+        return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, headerValue)
+                .body(resource);
+
     }
 }
