@@ -30,3 +30,13 @@ To run the project locally, follow these steps:
     ```bash
    ./mvnw install
 
+2. **Run the Application**
+    ```bash
+   ./mvnw spring-boot:run
+    
+## Configuration
+The default configuration file is located at src/main/resources/application.properties. You can configure database connection settings and other application properties here.
+
+## Database Diagram
+![database-diagram](https://github.com/user-attachments/assets/df119fec-f439-452d-be2c-4355162e40bd)
+
