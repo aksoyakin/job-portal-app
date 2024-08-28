@@ -40,3 +40,8 @@ The default configuration file is located at src/main/resources/application.prop
 ## Database Diagram
 ![database-diagram](https://github.com/user-attachments/assets/df119fec-f439-452d-be2c-4355162e40bd)
 
+## Photos
+![post-job](https://github.com/user-attachments/assets/693219e2-0dd4-46a2-8920-a62ac7d5d42f)
+![filter](https://github.com/user-attachments/assets/dc8a83b8-a710-4a11-94da-f687d81370e4)
+
+
