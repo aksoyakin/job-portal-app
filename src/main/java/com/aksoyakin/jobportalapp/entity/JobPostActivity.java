@@ -35,14 +35,11 @@ public class JobPostActivity {
     private String descriptionOfJob;
 
     private String jobType;
-
     private String salary;
-
     private String remote;
 
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     private Date postedDate;
-
     private String jobTitle;
 
     public JobPostActivity() {
@@ -95,27 +92,27 @@ public class JobPostActivity {
         this.jobCompanyId = jobCompanyId;
     }
 
-    public Boolean getActive() {
+    public Boolean getIsActive() {
         return isActive;
     }
 
-    public void setActive(Boolean active) {
+    public void setIsActive(Boolean active) {
         isActive = active;
     }
 
-    public Boolean getSaved() {
+    public Boolean getIsSaved() {
         return isSaved;
     }
 
-    public void setSaved(Boolean saved) {
+    public void setIsSaved(Boolean saved) {
         isSaved = saved;
     }
 
-    public @Length(max = 10000) String getDescriptionOfJob() {
+    public String getDescriptionOfJob() {
         return descriptionOfJob;
     }
 
-    public void setDescriptionOfJob(@Length(max = 10000) String descriptionOfJob) {
+    public void setDescriptionOfJob(String descriptionOfJob) {
         this.descriptionOfJob = descriptionOfJob;
     }
 
